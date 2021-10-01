@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # _*_coding:utf-8_*_
 # Auth by raysuen
-# version v8.0
+# version v8.1
 
 
 import datetime
@@ -123,7 +123,8 @@ class DateColculation(object):
 
 
     # 秒，分，时，日，周计算的实现函数
-    def R_General_Colculation(self, R_ColStr, time_truct, cal_parm):
+    # def R_General_Colculation(self, R_ColStr, time_truct, cal_parm):
+    def R_General_Colculation(self, R_ColStr, time_truct):
         R_ret_tuple = None
 
         if time_truct == None:  # 判断是否指定了输入时间，没指定则获取当前时间，否则使用指定的输入时间
@@ -284,33 +285,18 @@ class DateColculation(object):
                     ret_tupletime = self.R_Month_lastday(input_time)
                 else:
                     ret_tupletime = self.R_Month_lastday(time.localtime())
-            # second的计算
-            # elif ColStr.strip().lower().find("second") != -1:  # 判断是否传入的字符串中是否存在hour关键字
-            #     ret_tupletime = self.R_General_Colculation(ColStr.strip().lower(), input_time,"seconds")
-            # # minute的计算
-            # elif ColStr.strip().lower().find("minute") != -1:  # 判断是否传入的字符串中是否存在hour关键字
-            #     # ret_tupletime = self.R_Minute_Colculation(ColStr.strip().lower(), input_time)
-            #     ret_tupletime = self.R_General_Colculation(ColStr.strip().lower(), input_time, "minutes")
-            # # hour的计算
-            # elif ColStr.strip().lower().find("hour") != -1:  # 判断是否传入的字符串中是否存在hour关键字
-            #     # ret_tupletime = self.R_Hour_Colculation(ColStr.strip().lower(), input_time)
-            #     ret_tupletime = self.R_General_Colculation(ColStr.strip().lower(), input_time, "hours")
-            # # day的计算
-            # elif ColStr.strip().lower().find("day") != -1:  # 判断是否传入的字符串中是否存在day关键字
-            #     # ret_tupletime = self.R_Month_lastday(self.R_Day_Colculation(ColStr.strip().lower(), input_time))
-            #     ret_tupletime = self.R_General_Colculation(ColStr.strip().lower(), input_time, "days")
-            # # week的计算
-            # elif ColStr.strip().lower().find("week") != -1:  # 判断是否传入的字符串中是否存在day关键字
-            #     # ret_tupletime = self.R_Month_lastday(self.R_Week_Colculation(ColStr.strip().lower(), input_time))
-            #     ret_tupletime = self.R_General_Colculation(ColStr.strip().lower(), input_time, "weeks")
+            # second,minute,hour,day和week的计算
             elif ColStr.strip().lower().find("second") != -1 or ColStr.strip().lower().find("minute") != -1 or ColStr.strip().lower().find("hour") != -1 or ColStr.strip().lower().find("day") != -1 or ColStr.strip().lower().find("week") != -1:
-                ret_tupletime = self.R_General_Colculation(ColStr.strip().lower(), input_time)
+                if input_time != None:
+                    ret_tupletime = self.R_General_Colculation(ColStr.strip().lower(), self.R_Month_lastday(input_time))
+                else:
+                    ret_tupletime = self.R_General_Colculation(ColStr.strip().lower(), self.R_Month_lastday(time.localtime()))
             # month的计算
             elif ColStr.strip().lower().find("month") != -1:  # 判断是否传入的字符串中是否存在day关键字
-                ret_tupletime = self.R_Month_lastday(self.R_Month_Colculation(ColStr.strip().lower(), lastday, input_time))
+                ret_tupletime = self.R_Month_lastday(self.R_Month_Colculation(ColStr.strip().lower(), lastday, ret_tupletime))
             # year的计算
             elif ColStr.strip().lower().find("year") != -1:  # 判断是否传入的字符串中是否存在day关键字
-                ret_tupletime = self.R_Month_lastday(self.R_Year_Colculation(ColStr.strip().lower(), input_time))
+                ret_tupletime = self.R_Month_lastday(self.R_Year_Colculation(ColStr.strip().lower(), ret_tupletime))
 
             else:
                 print("Please enter right format symbol of -c.")
@@ -322,31 +308,15 @@ class DateColculation(object):
                     ret_tupletime = input_time
                 else:
                     ret_tupletime = time.localtime()
-
-            # second的计算
-            elif ColStr.strip().lower().find("second") != -1:  # 判断是否传入的字符串中是否存在hour关键字
-                ret_tupletime = self.R_General_Colculation(ColStr.strip().lower(), input_time, "seconds")
-            # minute的计算
-            elif ColStr.strip().lower().find("minute") != -1:  # 判断是否传入的字符串中是否存在hour关键字
-                # ret_tupletime = self.R_Minute_Colculation(ColStr.strip().lower(), input_time)
-                ret_tupletime = self.R_General_Colculation(ColStr.strip().lower(), input_time, "minutes")
-            # hour的计算
-            elif ColStr.strip().lower().find("hour") != -1:  # 判断是否传入的字符串中是否存在hour关键字
-                # ret_tupletime = self.R_Hour_Colculation(ColStr.strip().lower(), input_time)
-                ret_tupletime = self.R_General_Colculation(ColStr.strip().lower(), input_time, "hours")
-            # day的计算
-            elif ColStr.strip().lower().find("day") != -1:  # 判断是否传入的字符串中是否存在day关键字
-                # ret_tupletime = self.R_Month_lastday(self.R_Day_Colculation(ColStr.strip().lower(), input_time))
-                ret_tupletime = self.R_General_Colculation(ColStr.strip().lower(), input_time, "days")
-            # week的计算
-            elif ColStr.strip().lower().find("week") != -1:  # 判断是否传入的字符串中是否存在day关键字
-                # ret_tupletime = self.R_Month_lastday(self.R_Week_Colculation(ColStr.strip().lower(), input_time))
-                ret_tupletime = self.R_General_Colculation(ColStr.strip().lower(), input_time, "weeks")
-
+            # second,minute,hour,day和week的计算
+            elif ColStr.strip().lower().find("second") != -1 or ColStr.strip().lower().find(
+                    "minute") != -1 or ColStr.strip().lower().find("hour") != -1 or ColStr.strip().lower().find(
+                    "day") != -1 or ColStr.strip().lower().find("week") != -1:
+                ret_tupletime = self.R_General_Colculation(ColStr.strip().lower(), input_time)
             # month的计算
             elif ColStr.strip().lower().find("month") != -1:  # 判断是否传入的字符串中是否存在day关键字
                 ret_tupletime = self.R_Month_Colculation(ColStr.strip().lower(), lastday, input_time)
-            # year的计算
+            # # year的计算
             elif ColStr.strip().lower().find("year") != -1:  # 判断是否传入的字符串中是否存在day关键字
                 ret_tupletime = self.R_Year_Colculation(ColStr.strip().lower(), input_time)
 
