@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # _*_coding:utf-8_*_
 # Auth by raysuen
-# version v9
+# version v8.2
 
 
 import datetime
-# import time
+import time
 import calendar
 import sys
 import re
@@ -14,7 +14,7 @@ import re
 # 时间计算的类
 class DateColculation(object):
     rdate = {
-        "time_tuple": datetime.datetime.now(),  #time.localtime(),
+        "time_tuple": time.localtime(),
         "time_format": "%Y-%m-%d %H:%M:%S %A",
         "colculation_string": None,
         "last_day": False,
@@ -34,7 +34,7 @@ class DateColculation(object):
             self.rdate["input_time"] = in_time
         if in_format != None:
             self.rdate["input_format"] = in_format
-    # 月计算的具体实现函数,返回datatime类型
+    # 月计算的具体实现函数
     def __R_MonthAdd(self, col_num, add_minus, lastday, time_truct):
         R_MA_num = 0  # 记录计算的月的数字
         R_ret_tuple = None  # 返回值，None或者时间元组
@@ -45,7 +45,7 @@ class DateColculation(object):
         if time_truct == None:
             R_MA_datetime = datetime.datetime.now()  # 获取当前时间
         else:
-            R_MA_datetime = time_truct      #datetime.datetime.fromtimestamp(time.mktime(time_truct))
+            R_MA_datetime = datetime.datetime.fromtimestamp(time.mktime(time_truct))
 
         if add_minus.lower() == "add":  # 判断是否为+
             R_MA_num = R_MA_datetime.month + col_num
@@ -53,9 +53,9 @@ class DateColculation(object):
                 while R_MA_num > 12:
                     R_MA_datetime = R_MA_datetime.replace(year=R_MA_datetime.year + 1)
                     R_MA_num = R_MA_num - 12
-                R_ret_tuple = self.__days_add(R_MA_datetime, R_MA_num, lastday)     #.timetuple()
+                R_ret_tuple = self.__days_add(R_MA_datetime, R_MA_num, lastday).timetuple()
             else:
-                R_ret_tuple = self.__days_add(R_MA_datetime, R_MA_num, lastday)     #.timetuple()
+                R_ret_tuple = self.__days_add(R_MA_datetime, R_MA_num, lastday).timetuple()
         elif add_minus.lower() == "minus":  # 判断是否为-
             while col_num >= 12:  # 判断传入的参数是否大于12，如果大于12则对年做处理
                 R_MA_datetime = R_MA_datetime.replace(year=R_MA_datetime.year - 1)
@@ -76,8 +76,8 @@ class DateColculation(object):
                 R_MA_datetime = R_MA_datetime.replace(year=R_MA_datetime.year - 1, month=12)
             elif R_MA_datetime.month - col_num > 0:  # 默认表示当前月份-传入参数(需要减去的月数字)大于0，不需要处理年
                 R_MA_datetime = self.__days_add(R_MA_datetime, R_MA_datetime.month - col_num, lastday)
-            R_ret_tuple = R_MA_datetime     #.timetuple()
-        return R_ret_tuple  # 返回datatime类型，/*时间元组*/
+            R_ret_tuple = R_MA_datetime.timetuple()
+        return R_ret_tuple  # 返回时间元组
 
     def __days_add(self, formal_MA_datetime, formal_MA_num, lastday):
         R_MA_datetime = formal_MA_datetime
@@ -130,26 +130,26 @@ class DateColculation(object):
         if time_truct == None:  # 判断是否指定了输入时间，没指定则获取当前时间，否则使用指定的输入时间
             R_Datatime = datetime.datetime.now()
         else:
-            R_Datatime = time_truct   #datetime.datetime.fromtimestamp(time.mktime(time_truct))
+            R_Datatime = datetime.datetime.fromtimestamp(time.mktime(time_truct))
 
         if R_ColStr.find("-") != -1:  # 判断-是否存在字符串
             col_num = R_ColStr.split("-")[-1].strip()  # 获取需要计算的数字
             if col_num.strip().isdigit():  # 判断获取的数字是否为正整数
                 if R_ColStr.strip().lower().find("second") != -1:
                     R_ret_tuple = (R_Datatime + datetime.timedelta(
-                        seconds=-int(col_num.strip())))         #获取datatime类型    .timetuple()  # 获取tuple time时间格式
+                        seconds=-int(col_num.strip()))).timetuple()  # 获取tuple time时间格式
                 elif R_ColStr.strip().lower().find("minute") != -1:
                     R_ret_tuple = (R_Datatime + datetime.timedelta(
-                        minutes=-int(col_num.strip())))         #获取datatime类型    .timetuple()  # 获取tuple time时间格式
+                        minutes=-int(col_num.strip()))).timetuple()  # 获取tuple time时间格式
                 elif R_ColStr.strip().lower().find("hour") != -1:
                     R_ret_tuple = (R_Datatime + datetime.timedelta(
-                        hours=-int(col_num.strip())))           #获取datatime类型    .timetuple()  # 获取tuple time时间格式
+                        hours=-int(col_num.strip()))).timetuple()  # 获取tuple time时间格式
                 elif R_ColStr.strip().lower().find("day") != -1:
-                    # R_ret_tuple = (R_Datatime + datetime.timedelta(days=-int(col_num.strip()))).timetuple()  # 获取tuple time时间格式
-                    R_ret_tuple =(R_Datatime + datetime.timedelta(days=-int(col_num.strip())))   #获取datatime类型    
+                    R_ret_tuple = (R_Datatime + datetime.timedelta(
+                        days=-int(col_num.strip()))).timetuple()  # 获取tuple time时间格式
                 elif R_ColStr.strip().lower().find("week") != -1:
                     R_ret_tuple = (R_Datatime + datetime.timedelta(
-                        weeks=-int(col_num.strip())))       #获取datatime类型    .timetuple()  # 获取tuple time时间格式
+                        weeks=-int(col_num.strip()))).timetuple()  # 获取tuple time时间格式
                 # R_ret_tuple = (R_Datatime + datetime.timedelta(cal_parm=-int(col_num.strip()))).timetuple()  # 获取tuple time时间格式
             else:  # 如果获取的数字不为正整数，则退出程序
                 print("Please enter right format symbol!!")
@@ -160,23 +160,19 @@ class DateColculation(object):
             if col_num.strip().isdigit():  # 判断获取的数字是否为正整数
                 if R_ColStr.strip().lower().find("second") != -1:
                     R_ret_tuple = (R_Datatime + datetime.timedelta(
-                        seconds=int(col_num.strip())))      #获取datatime类型    .timetuple()  # 获取tuple time时间格式
+                        seconds=int(col_num.strip()))).timetuple()  # 获取tuple time时间格式
                 elif R_ColStr.strip().lower().find("minute") != -1:
                     R_ret_tuple = (R_Datatime + datetime.timedelta(
-                        minutes=int(col_num.strip())))      #获取datatime类型    .timetuple()  # 获取tuple time时间格式
+                        minutes=int(col_num.strip()))).timetuple()  # 获取tuple time时间格式
                 elif R_ColStr.strip().lower().find("hour") != -1:
                     R_ret_tuple = (R_Datatime + datetime.timedelta(
-                        hours=int(col_num.strip())))        #获取datatime类型    .timetuple()  # 获取tuple time时间格式
+                        hours=int(col_num.strip()))).timetuple()  # 获取tuple time时间格式
                 elif R_ColStr.strip().lower().find("day") != -1:
-                    # R_ret_tuple = (R_Datatime + datetime.timedelta(
-                    #     days=int(col_num.strip()))).timetuple()  # 获取tuple time时间格式
-                    R_ret_tuple = (R_Datatime + datetime.timedelta(days=int(col_num.strip())))
-                    # print(R_Datatime + datetime.timedelta(days=-int(col_num.strip())))
-                    # print(time.localtime(datetime.datetime.timestamp(R_Datatime + datetime.timedelta(days=-int(col_num.strip())))))
-                    # exit(1)
+                    R_ret_tuple = (R_Datatime + datetime.timedelta(
+                        days=int(col_num.strip()))).timetuple()  # 获取tuple time时间格式
                 elif R_ColStr.strip().lower().find("week") != -1:
                     R_ret_tuple = (R_Datatime + datetime.timedelta(
-                        weeks=int(col_num.strip())))        #获取datatime类型.timetuple()  # 获取tuple time时间格式
+                        weeks=int(col_num.strip()))).timetuple()  # 获取tuple time时间格式
             else:
                 print("Please enter right format symbol!!")
                 print("If you don't kown what values is avalable,please use -h to get help!")
@@ -190,7 +186,7 @@ class DateColculation(object):
         if time_truct == None:  # 判断是否指定了输入时间，没指定则获取当前时间，否则使用指定的输入时间
             R_Y_Datatime = datetime.datetime.now()
         else:
-            R_Y_Datatime = time_truct       #datetime.datetime.fromtimestamp(time.mktime(time_truct))
+            R_Y_Datatime = datetime.datetime.fromtimestamp(time.mktime(time_truct))
 
         if R_ColStr.find("-") != -1:  # 判断-是否存在字符串
             col_num = R_ColStr.split("-")[-1].strip()  # 获取需要计算的数字
@@ -201,11 +197,11 @@ class DateColculation(object):
                         R_Y_Datatime.year - int(col_num.strip())) == False:
                     R_ret_tuple = (
                     R_Y_Datatime.replace(year=R_Y_Datatime.year - int(col_num.strip()), month=R_Y_Datatime.month + 1,
-                                         day=1))        #获取datatime类型.timetuple()  # 获取tuple time时间格式
+                                         day=1)).timetuple()  # 获取tuple time时间格式
                 else:
                     R_ret_tuple = (
                         R_Y_Datatime.replace(
-                            year=R_Y_Datatime.year - int(col_num.strip())))     #获取datatime类型.timetuple()  # 获取tuple time时间格式
+                            year=R_Y_Datatime.year - int(col_num.strip()))).timetuple()  # 获取tuple time时间格式
             else:  # 如果获取的数字不为正整数，则退出程序
                 print("Please enter right format symbol!!")
                 print("If you don't kown what values is avalable,please use -h to get help!")
@@ -219,11 +215,11 @@ class DateColculation(object):
                     R_Y_Datatime.year + col_num.strip()) == False:
                     R_ret_tuple = (
                         R_Y_Datatime.replace(year=R_Y_Datatime.year - int(col_num.strip()),
-                                             month=R_Y_Datatime.month + 1, day=1))      #获取datatime类型    .timetuple()  # 获取tuple time时间格式
+                                             month=R_Y_Datatime.month + 1, day=1)).timetuple()  # 获取tuple time时间格式
                 else:
                     R_ret_tuple = (
                         R_Y_Datatime.replace(
-                            year=R_Y_Datatime.year + int(col_num.strip())))     #获取datatime类型    .timetuple()  # 获取tuple time时间格式
+                            year=R_Y_Datatime.year + int(col_num.strip()))).timetuple()  # 获取tuple time时间格式
             else:
                 print("Please enter right format symbol!!")
                 print("If you don't kown what values is avalable,please use -h to get help!")
@@ -232,10 +228,9 @@ class DateColculation(object):
 
     # 获取月的最后一天
     def R_Month_lastday(self, time_tuple):
-        # R_MA_datetime = datetime.datetime.fromtimestamp(time.mktime(time_tuple))  # time_tuple
-        # R_MA_datetime = R_MA_datetime.replace(day=(calendar.monthrange(R_MA_datetime.year, R_MA_datetime.month)[1]))
-        R_MA_datetime = time_tuple.replace(day=(calendar.monthrange(time_tuple.year, time_tuple.month)[1]))
-        return R_MA_datetime        #.timetuple()
+        R_MA_datetime = datetime.datetime.fromtimestamp(time.mktime(time_tuple))  # time_tuple
+        R_MA_datetime = R_MA_datetime.replace(day=(calendar.monthrange(R_MA_datetime.year, R_MA_datetime.month)[1]))
+        return R_MA_datetime.timetuple()
 
 
     def R_colculation(self):
@@ -260,9 +255,9 @@ class DateColculation(object):
                 while 1:
                     try:
                         if i < 2:
-                            input_time = datetime.datetime.strptime(self.rdate["input_time"], "%Y%m%d")         #time.strptime(self.rdate["input_time"], "%Y%m%d")
+                            input_time = time.strptime(self.rdate["input_time"], "%Y%m%d")
                         else:
-                            input_time = datetime.datetime.strptime(self.rdate["input_time"], "%Y-%m-%d")         #time.strptime(self.rdate["input_time"], "%Y-%m-%d")
+                            input_time = time.strptime(self.rdate["input_time"], "%Y-%m-%d")
                         break
                     except ValueError as e:
                         if i < 2:
@@ -273,13 +268,13 @@ class DateColculation(object):
 
             elif self.rdate["input_format"] == "%s":
                 if self.rdate["input_time"].isdigit():
-                    input_time = datetime.datetime.fromtimestamp(int(self.rdate["input_time"]))
+                    input_time = time.localtime(int(self.rdate["input_time"]))
                 else:
                     print("The input time must be number.")
                     exit(97)
             else:
                 try:
-                    input_time = datetime.datetime.strptime(self.rdate["input_time"], self.rdate["input_format"])
+                    input_time = time.strptime(self.rdate["input_time"], self.rdate["input_format"])
                 except ValueError as e:
                     print("The input time and format do not match.")
                     exit(98)
@@ -289,13 +284,13 @@ class DateColculation(object):
                 if input_time != None:
                     ret_tupletime = self.R_Month_lastday(input_time)
                 else:
-                    ret_tupletime = self.R_Month_lastday(datetime.datetime.now())
+                    ret_tupletime = self.R_Month_lastday(time.localtime())
             # second,minute,hour,day和week的计算
             elif ColStr.strip().lower().find("second") != -1 or ColStr.strip().lower().find("minute") != -1 or ColStr.strip().lower().find("hour") != -1 or ColStr.strip().lower().find("day") != -1 or ColStr.strip().lower().find("week") != -1:
                 if input_time != None:
                     ret_tupletime = self.R_General_Colculation(ColStr.strip().lower(), self.R_Month_lastday(input_time))
                 else:
-                    ret_tupletime = self.R_General_Colculation(ColStr.strip().lower(), self.R_Month_lastday(datetime.datetime.now()))
+                    ret_tupletime = self.R_General_Colculation(ColStr.strip().lower(), self.R_Month_lastday(time.localtime()))
             # month的计算
             elif ColStr.strip().lower().find("month") != -1:  # 判断是否传入的字符串中是否存在day关键字
                 ret_tupletime = self.R_Month_lastday(self.R_Month_Colculation(ColStr.strip().lower(), lastday, ret_tupletime))
@@ -310,9 +305,9 @@ class DateColculation(object):
         else:
             if ColStr == None:
                 if self.rdate["input_time"] != None:
-                    ret_tupletime = self.rdate["input_time"]
+                    ret_tupletime = input_time
                 else:
-                    ret_tupletime = datetime.datetime.now()         #time.localtime()
+                    ret_tupletime = time.localtime()
             # second,minute,hour,day和week的计算
             elif ColStr.strip().lower().find("second") != -1 or ColStr.strip().lower().find(
                     "minute") != -1 or ColStr.strip().lower().find("hour") != -1 or ColStr.strip().lower().find(
@@ -470,11 +465,9 @@ if __name__ == "__main__":
                 exit(3)
             i = i + 1
         d1.rdate["time_tuple"] = d1.R_colculation()  # 获取时间的元组，通过R_colculation函数，R_colculation参数为传入一个需要计算的时间字符串
-        # print(time.strftime(d1.rdate["time_format"], d1.rdate["time_tuple"]))
-        print(d1.rdate["time_tuple"].strftime(d1.rdate["time_format"]))
+        print(time.strftime(d1.rdate["time_format"], d1.rdate["time_tuple"]))
         exit(0)
     else:  # 如果不输入参数，则输出默认格式化的本地时间
-        # print(time.strftime(d1.rdate["time_format"], d1.rdate["time_tuple"]))
-        print(d1.rdate["time_tuple"].strftime(d1.rdate["time_format"]))
+        print(time.strftime(d1.rdate["time_format"], d1.rdate["time_tuple"]))
         exit(0)
 
