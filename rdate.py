@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # _*_coding:utf-8_*_
 # Auth by raysuen
-# version v8.1
+# version v8.2
 
 
 import datetime
@@ -336,7 +336,7 @@ def func_help():
         rdate [-f] [time format] [-c] [colculation format] [-d] [input_time] [input_time_format]
     DESCRIPTION:
 
-        -c: value is hour/day/week/month/year,plus +/-,plus a number which is number to colculate
+        -c: value is second/minute/hour/day/week/month/year,plus +/-,plus a number which is number to colculate
 
         -l: obtain a number which is last day of month
 
