@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # _*_coding:utf-8_*_
 # Auth by raysuen
-# version v9.1
+# version v9
 
 
 import datetime
@@ -309,8 +309,8 @@ class DateColculation(object):
                 exit(3)
         else:
             if ColStr == None:
-                if self.rdate["input_time"] != None and input_time != None:
-                    ret_tupletime = input_time  #self.rdate["input_time"]
+                if self.rdate["input_time"] != None:
+                    ret_tupletime = self.rdate["input_time"]
                 else:
                     ret_tupletime = datetime.datetime.now()         #time.localtime()
             # second,minute,hour,day和week的计算
